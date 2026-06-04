@@ -827,8 +827,7 @@ body {
 // CONFIG
 // ══════════════════════════════════════
 const CONFIG = {
-  GSHEET_URL: 'https://script.google.com/macros/s/AKfycbx8k263EOnVtjr2xLK5KyKEJtiU5rM1QbsicjoTm8ruzcuEXuOIf96BuUQz7MDWJp3N/exec',
-  SECRET: 'WV_QUIZ_2024',
+  SUBMIT_URL: '/api/submit',
 };
 
 // ══════════════════════════════════════
@@ -1216,20 +1215,18 @@ function saveToSheet(persona) {
       email:     userEmail,
       score:     totalScore,
       persona:   persona.name,
-      secret:    CONFIG.SECRET,
     };
     // Add each question answer as q1, q2 ... q10
     perQuestionAnswers.forEach((ans, i) => {
       payload[`q${i+1}`] = ans;
     });
-    fetch(CONFIG.GSHEET_URL, {
+    fetch(CONFIG.SUBMIT_URL, {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
   } catch(e) {
-    console.warn('Sheet error:', e);
+    console.warn('Submit error:', e);
   }
 }
 
