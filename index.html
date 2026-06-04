@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a3a2a">
+<title>How Sustainable Is Your Fashion Brand? — Weaving Vibes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & ROOT ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; overflow:hidden; }
+
+:root {
+  --cream:      #f0ebe0;
+  --cream2:     #e6dfd0;
+  --cream3:     #d8cfbc;
+  --green-deep: #152e20;
+  --green-mid:  #1e4a2e;
+  --green-light:#3d6b4a;
+  --green-pale: #a8c8a0;
+  --gold:       #c4923a;
+  --gold-light: #e8b96a;
+  --gold-pale:  #f5e4c0;
+  --text-dark:  #111810;
+  --text-mid:   #3a4038;
+  --text-light: #7a806a;
+  --white:      #ffffff;
+  --shadow-sm:  0 4px 20px rgba(21,46,32,0.10);
+  --shadow-md:  0 8px 40px rgba(21,46,32,0.16);
+  --shadow-lg:  0 20px 60px rgba(21,46,32,0.22);
+  --r-lg:       24px;
+  --r-xl:       32px;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--green-deep);
+  color: var(--text-dark);
+  position: relative;
+}
+
+/* ── SCREEN SYSTEM ── */
+.screen {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: translateX(30px);
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+.screen.exit {
+  opacity: 0;
+  transform: translateX(-30px);
+  pointer-events: none;
+}
+
+/* ── LANDING SCREEN ── */
+#screen-landing {
+  background: var(--green-deep);
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.landing-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(61,107,74,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(196,146,58,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.landing-bg::after {
+  content:'';
+  position:absolute; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+.landing-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  padding: 0 0 40px;
+}
+
+.landing-top {
+  padding: 52px 28px 0;
+  flex: 1;
+}
+
+.wv-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 40px;
+  padding: 6px 14px 6px 10px;
+  margin-bottom: 36px;
+}
+
+.wv-pill-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,100%{ opacity:1; transform:scale(1); }
+  50%{ opacity:0.5; transform:scale(0.7); }
+}
+
+.wv-pill span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+}
+
+.landing-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.08;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.landing-headline em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.landing-sub {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.65;
+  margin-bottom: 44px;
+  max-width: 300px;
+}
+
+.leaf-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.leaf-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* form card */
+.form-card {
+  background: var(--cream);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: 36px 28px 40px;
+  position: relative;
+}
+
+.form-card::before {
+  content:'';
+  position: absolute;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  width: 36px; height: 4px;
+  background: var(--cream3);
+  border-radius: 99px;
+}
+
+.form-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--green-deep);
+  margin-bottom: 6px;
+  margin-top: 8px;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: var(--text-light);
+  font-weight: 300;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+.field input {
+  width: 100%;
+  padding: 16px 18px;
+  border: 1.5px solid var(--cream3);
+  border-radius: 14px;
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+
+.field input:focus {
+  border-color: var(--green-light);
+  box-shadow: 0 0 0 3px rgba(61,107,74,0.1);
+}
+
+.field input.error {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+}
+
+.field-error {
+  font-size: 11px;
+  color: #c0392b;
+  margin-top: 5px;
+  display: none;
+  font-weight: 400;
+}
+
+.field-error.show { display: block; }
+
+.field input::placeholder { color: var(--cream3); }
+
+.btn-start {
+  width: 100%;
+  padding: 18px;
+  background: var(--green-deep);
+  color: var(--white);
+  border: none;
+  border-radius: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-start:active { transform: scale(0.98); }
+
+.btn-start .btn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-start .arrow {
+  width: 24px; height: 24px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+
+.btn-start:active .arrow { transform: translateX(3px); }
+
+.privacy-note {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+/* ── QUIZ SCREEN ── */
+#screen-quiz {
+  background: var(--cream);
+  min-height: 100%;
+}
+
+.quiz-header {
+  background: var(--green-deep);
+  padding: 52px 24px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.quiz-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.quiz-qnum {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+}
+
+.quiz-score-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+}
+
+.progress-track {
+  height: 3px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-pale), var(--gold-light));
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.quiz-body {
+  padding: 32px 24px 40px;
+}
+
+.q-category {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green-light);
+  margin-bottom: 10px;
+}
+
+.q-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--green-deep);
+  line-height: 1.25;
+  margin-bottom: 28px;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-btn {
+  width: 100%;
+  padding: 18px 20px;
+  background: var(--white);
+  border: 1.5px solid var(--cream3);
+  border-radius: 18px;
+  text-align: left;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-mid);
+  line-height: 1.4;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  -webkit-appearance: none;
+}
+
+.option-btn:active { transform: scale(0.98); }
+
+.option-label {
+  width: 36px; height: 36px;
+  flex-shrink: 0;
+  background: var(--cream);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.option-btn.selected {
+  background: var(--green-deep);
+  border-color: var(--green-deep);
+  color: var(--white);
+  box-shadow: 0 8px 24px rgba(21,46,32,0.25);
+  transform: scale(1.01);
+}
+
+.option-btn.selected .option-label {
+  background: rgba(255,255,255,0.15);
+  color: var(--white);
+}
+
+/* next btn */
+.btn-next {
+  width: 100%;
+  padding: 18px;
+  background: var(--green-deep);
+  color: var(--white);
+  border: none;
+  border-radius: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 24px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.15s;
+}
+
+.btn-next.visible { display: flex; animation: slideUp 0.3s ease forwards; }
+.btn-next:active { transform: scale(0.98); }
+
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(12px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* ── RESULT SCREEN ── */
+#screen-result {
+  background: var(--green-deep);
+  min-height: 100%;
+}
+
+.result-bg {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(61,107,74,0.6) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 50% at 20% 100%, rgba(196,146,58,0.15) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.result-inner {
+  position: relative;
+  z-index: 1;
+  padding: 60px 24px 52px;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.result-verdict {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.persona-emoji {
+  font-size: 64px;
+  text-align: center;
+  margin: 16px 0 12px;
+  animation: floatEmoji 3s ease-in-out infinite;
+}
+
+@keyframes floatEmoji {
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-8px); }
+}
+
+.persona-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.persona-name em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+/* score ring */
+.score-ring-wrap {
+  width: 120px; height: 120px;
+  margin: 16px auto 20px;
+  position: relative;
+}
+
+.score-ring-wrap svg { transform: rotate(-90deg); }
+
+.score-ring-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-ring-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+}
+
+.score-ring-denom {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+
+/* persona card */
+.persona-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--r-lg);
+  padding: 24px 20px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.persona-desc {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 300;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* insight card */
+.insight-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.insight-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.insight-row:last-child { margin-bottom: 0; }
+
+.insight-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.insight-content {}
+
+.insight-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 3px;
+}
+
+.insight-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+/* traits */
+.traits-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.trait-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+}
+
+.btn-retake {
+  width: 100%;
+  padding: 16px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 14px;
+  color: rgba(255,255,255,0.65);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--green-mid);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 200;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+}
+
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Q TRANSITION ── */
+@keyframes qIn {
+  from { opacity:0; transform:translateX(20px); }
+  to { opacity:1; transform:translateX(0); }
+}
+
+.q-enter { animation: qIn 0.3s ease forwards; }
+
+/* confetti particles */
+.confetti-wrap {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.confetti-p {
+  position: absolute;
+  top: -10px;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- CONFETTI -->
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — LANDING
+══════════════════════════════════════ -->
+<div class="screen active" id="screen-landing">
+  <div class="landing-bg"></div>
+  <div class="landing-inner">
+    <div class="landing-top">
+      <div class="wv-pill">
+        <div class="wv-pill-dot"></div>
+        <span>Weaving Vibes</span>
+      </div>
+
+      <h1 class="landing-headline">How <em>Sustainable</em><br>Is Your Fashion Brand?</h1>
+
+      <p class="landing-sub">10 questions. One verdict. Discover where your brand truly stands on sustainability.</p>
+
+      <div class="leaf-row">
+        <div class="leaf-tag">🌿 10 Questions</div>
+        <div class="leaf-tag">⚡ 3 Minutes</div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-title">Let's get started</div>
+      <div class="form-hint">Enter your brand details to begin the assessment.</div>
+
+      <div class="field">
+        <label>Brand Name</label>
+        <input type="text" id="inp-name" placeholder="e.g. Kala Studio" autocomplete="organization" inputmode="text">
+        <div class="field-error" id="err-name">Please enter your brand name</div>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="inp-email" placeholder="you@yourbrand.com" autocomplete="email" inputmode="email">
+        <div class="field-error" id="err-email">Please enter a valid email address</div>
+      </div>
+
+      <button class="btn-start" onclick="startQuiz()">
+        <div class="btn-inner">
+          <span>Begin Assessment</span>
+          <div class="arrow">→</div>
+        </div>
+      </button>
+
+      <div class="privacy-note">🔒 Your details are kept private. No spam, ever.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — QUIZ
+══════════════════════════════════════ -->
+<div class="screen" id="screen-quiz">
+  <div class="quiz-header">
+    <div class="quiz-meta">
+      <div class="quiz-qnum" id="q-num-label">Question 1 of 10</div>
+      <div class="quiz-score-badge">🌿 <span id="live-score">0</span> pts</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:10%"></div>
+    </div>
+  </div>
+
+  <div class="quiz-body" id="quiz-body">
+    <!-- injected by JS -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 — RESULT
+══════════════════════════════════════ -->
+<div class="screen" id="screen-result">
+  <div class="result-bg"></div>
+  <div class="result-inner">
+
+    <div class="result-eyebrow">Your Assessment Result</div>
+    <div class="result-verdict" id="res-verdict">Your sustainability profile is ready.</div>
+
+    <div class="persona-emoji" id="res-emoji">🌿</div>
+    <div class="persona-name" id="res-name"><em>Conventional Brand</em></div>
+
+    <div class="score-ring-wrap">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+        <circle cx="60" cy="60" r="50" fill="none" stroke="url(#rg)" stroke-width="8"
+          stroke-dasharray="314" id="result-ring" stroke-dashoffset="314" stroke-linecap="round"/>
+        <defs>
+          <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#a8c8a0"/>
+            <stop offset="100%" stop-color="#e8b96a"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="score-ring-inner">
+        <div class="score-ring-num" id="res-score-num">0</div>
+        <div class="score-ring-denom">/ 100</div>
+      </div>
+    </div>
+
+    <div class="traits-row" id="res-traits"></div>
+
+    <div class="persona-card">
+      <div class="persona-desc" id="res-desc"></div>
+    </div>
+
+    <div class="insight-card" id="res-insights"></div>
+
+    <button class="btn-retake" onclick="retake()">↩ Retake Assessment</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════
+const CONFIG = {
+  GSHEET_URL: 'https://script.google.com/macros/s/AKfycbx8k263EOnVtjr2xLK5KyKEJtiU5rM1QbsicjoTm8ruzcuEXuOIf96BuUQz7MDWJp3N/exec',
+  SECRET: 'WV_QUIZ_2024',
+};
+
+// ══════════════════════════════════════
+// SCORING MAP: option index (0-3) → points
+// A=0, B=3, C=7, D=10  (max 100)
+// ══════════════════════════════════════
+const SCORE_MAP = [0, 3, 7, 10];
+
+// ══════════════════════════════════════
+// QUIZ DATA
+// ══════════════════════════════════════
+const questions = [
+  {
+    category: 'Fabric Sourcing',
+    text: 'When sourcing fabrics, what matters most to you?',
+    options: [
+      { label:'A', icon:'💰', text:'Price and availability above all' },
+      { label:'B', icon:'🎨', text:'Quality and aesthetics first' },
+      { label:'C', icon:'⚖️', text:'A balance of quality, cost and sustainability' },
+      { label:'D', icon:'🌿', text:'Material origin, impact and traceability' },
+    ]
+  },
+  {
+    category: 'Hemp & Natural Fabrics',
+    text: 'How familiar are you with hemp as a textile material?',
+    options: [
+      { label:'A', icon:'🤷', text:'Never really considered it' },
+      { label:'B', icon:'👂', text:'I\'ve heard of it but don\'t know much' },
+      { label:'C', icon:'📖', text:'I know the basics — natural, durable, eco-friendly' },
+      { label:'D', icon:'🔬', text:'I understand its properties, certifications and use cases deeply' },
+    ]
+  },
+  {
+    category: 'Supply Chain',
+    text: 'How transparent is your supply chain today?',
+    options: [
+      { label:'A', icon:'❓', text:'We buy from a manufacturer — that\'s all we track' },
+      { label:'B', icon:'🗺️', text:'We know our vendors at a surface level' },
+      { label:'C', icon:'🧶', text:'We track sourcing till yarn/fiber stage' },
+      { label:'D', icon:'📋', text:'Fully traceable with documentation end-to-end' },
+    ]
+  },
+  {
+    category: 'Buying Decisions',
+    text: 'How do you currently make fabric sourcing decisions?',
+    options: [
+      { label:'A', icon:'⚡', text:'Whoever gives the best price and fastest delivery' },
+      { label:'B', icon:'🧑‍🎨', text:'Based on what our designer or merchandiser picks' },
+      { label:'C', icon:'🔍', text:'Based on fabric properties, certifications and brand fit' },
+      { label:'D', icon:'🤝', text:'Through research, sampling, supplier audits and long-term partnerships' },
+    ]
+  },
+  {
+    category: 'Waste & Deadstock',
+    text: 'What happens to your leftover fabric or deadstock?',
+    options: [
+      { label:'A', icon:'🗑️', text:'It usually gets discarded' },
+      { label:'B', icon:'📦', text:'Stored, sometimes reused if possible' },
+      { label:'C', icon:'💸', text:'Sold off or donated' },
+      { label:'D', icon:'🔄', text:'Integrated into a circular or zero-waste system' },
+    ]
+  },
+  {
+    category: 'Talking Sustainability',
+    text: 'When a customer asks "is this sustainable?" — what can you tell them?',
+    options: [
+      { label:'A', icon:'😅', text:'Honestly, not much' },
+      { label:'B', icon:'💬', text:'We say it\'s good quality and natural' },
+      { label:'C', icon:'🏷️', text:'We explain the material and where it\'s from' },
+      { label:'D', icon:'📊', text:'We share certifications, sourcing story and environmental impact data' },
+    ]
+  },
+  {
+    category: 'Production',
+    text: 'How does your brand approach production volumes?',
+    options: [
+      { label:'A', icon:'🏭', text:'Large bulk based on forecasts' },
+      { label:'B', icon:'📅', text:'Seasonal production, some overstock happens' },
+      { label:'C', icon:'🔢', text:'Small batches with controlled inventory' },
+      { label:'D', icon:'🎯', text:'Demand-based or made-to-order only' },
+    ]
+  },
+  {
+    category: 'Real Commitment',
+    text: 'Have you ever chosen a fabric for sustainability reasons — even if it cost more?',
+    options: [
+      { label:'A', icon:'❌', text:'No, cost always wins' },
+      { label:'B', icon:'💭', text:'We\'ve thought about it but haven\'t acted' },
+      { label:'C', icon:'✅', text:'Yes, once or twice when the difference was small' },
+      { label:'D', icon:'🌱', text:'Yes, regularly — it\'s part of how we make decisions' },
+    ]
+  },
+  {
+    category: 'Customer Communication',
+    text: 'How do you talk about sustainability to your customers?',
+    options: [
+      { label:'A', icon:'🔇', text:'We don\'t — it hasn\'t come up' },
+      { label:'B', icon:'🗣️', text:'Occasionally when a customer asks' },
+      { label:'C', icon:'📣', text:'Through campaigns and product storytelling' },
+      { label:'D', icon:'🌍', text:'It\'s woven into our brand identity at every touchpoint' },
+    ]
+  },
+  {
+    category: 'Where You Stand',
+    text: 'Where does your brand honestly sit on the sustainability journey?',
+    options: [
+      { label:'A', icon:'🌅', text:'We\'re just starting to think about it' },
+      { label:'B', icon:'🚶', text:'We\'re aware but haven\'t made big moves yet' },
+      { label:'C', icon:'🏃', text:'We\'re actively making changes — it\'s a work in progress' },
+      { label:'D', icon:'✨', text:'Sustainability is already at the core of what we build' },
+    ]
+  },
+];
+
+// Strongest area names per question index
+const areaNames = [
+  'Fabric Sourcing','Hemp Awareness','Supply Chain Transparency',
+  'Buying Decisions','Waste Management','Sustainability Communication',
+  'Production','Real Commitment','Customer Education','Brand Identity'
+];
+
+// ══════════════════════════════════════
+// PERSONAS — 5 tiers across 0–100
+// ══════════════════════════════════════
+const personas = [
+  {
+    min:0, max:20,
+    emoji:'🌅',
+    name:'The Starting Point',
+    desc:'Your brand is at the very beginning of the sustainability conversation. That\'s not a setback — it\'s an honest place to start from. The brands that build the most credibility are the ones who begin with honesty and grow with intention.',
+    traits:['Early Stage','Open to Learning','High Potential'],
+    verdict:'Every great journey starts somewhere. Yours starts here.'
+  },
+  {
+    min:21, max:40,
+    emoji:'🌱',
+    name:'The Aware Brand',
+    desc:'You know sustainability matters and you\'re starting to feel the pressure to act. The awareness is real — but awareness alone won\'t move the needle. The next step is turning what you know into what you do.',
+    traits:['Aware','Curious','Building'],
+    verdict:'You see the path. Now it\'s time to walk it.'
+  },
+  {
+    min:41, max:65,
+    emoji:'🌿',
+    name:'The Evolving Brand',
+    desc:'You\'re making real moves. Some systems are in place, some decisions are being made with intention. You\'re not just talking about sustainability — you\'re starting to build it in. Keep pushing the depth.',
+    traits:['Intentional','Progressing','Committed'],
+    verdict:'You\'re building something real. Keep going deeper.'
+  },
+  {
+    min:66, max:85,
+    emoji:'🌍',
+    name:'The Responsible Brand',
+    desc:'Sustainability is becoming part of how your brand actually operates — not just how it communicates. You\'re making sourcing decisions, having honest conversations with customers, and thinking beyond seasons. This is where real impact begins.',
+    traits:['Responsible','Systematic','Impact-Driven'],
+    verdict:'Sustainability is in your brand\'s DNA now.'
+  },
+  {
+    min:86, max:100,
+    emoji:'✨',
+    name:'The Future-Forward Brand',
+    desc:'You\'re not following the sustainable fashion movement — you\'re part of shaping it. Your decisions, your sourcing, your communication all reflect a brand that takes the long view. This is exactly the kind of brand the industry needs more of.',
+    traits:['Pioneering','Systemic','Leading'],
+    verdict:'You\'re setting the standard. The industry needs more brands like yours.'
+  },
+];
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let brandName  = '';
+let userEmail  = '';
+let currentQ   = 0;
+let totalScore = 0;
+let selectedIndex = -1;
+let perQuestionScores = [];
+let perQuestionAnswers = []; // answer text per question
+
+// ══════════════════════════════════════
+// EMAIL VALIDATION
+// ══════════════════════════════════════
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+}
+
+// ══════════════════════════════════════
+// SCREEN TRANSITIONS
+// ══════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    if (s.classList.contains('active')) {
+      s.classList.remove('active');
+      s.classList.add('exit');
+      setTimeout(() => s.classList.remove('exit'), 400);
+    }
+  });
+  setTimeout(() => {
+    const target = document.getElementById(id);
+    target.classList.add('active');
+    target.scrollTop = 0;
+  }, 50);
+}
+
+// ══════════════════════════════════════
+// START QUIZ
+// ══════════════════════════════════════
+function startQuiz() {
+  const nameEl  = document.getElementById('inp-name');
+  const emailEl = document.getElementById('inp-email');
+  const errName  = document.getElementById('err-name');
+  const errEmail = document.getElementById('err-email');
+
+  let valid = true;
+
+  // reset errors
+  nameEl.classList.remove('error');
+  emailEl.classList.remove('error');
+  errName.classList.remove('show');
+  errEmail.classList.remove('show');
+
+  if (!nameEl.value.trim()) {
+    nameEl.classList.add('error');
+    errName.classList.add('show');
+    valid = false;
+  }
+
+  if (!isValidEmail(emailEl.value)) {
+    emailEl.classList.add('error');
+    errEmail.classList.add('show');
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  brandName  = nameEl.value.trim();
+  userEmail  = emailEl.value.trim();
+  currentQ   = 0;
+  totalScore = 0;
+  selectedIndex = -1;
+  perQuestionScores = [];
+  perQuestionAnswers = [];
+
+  showScreen('screen-quiz');
+  setTimeout(() => renderQuestion(), 150);
+}
+
+// ══════════════════════════════════════
+// RENDER QUESTION
+// ══════════════════════════════════════
+function renderQuestion() {
+  const q = questions[currentQ];
+  selectedIndex = -1;
+
+  document.getElementById('q-num-label').textContent = `Question ${currentQ+1} of ${questions.length}`;
+  document.getElementById('progress-fill').style.width = `${((currentQ+1)/questions.length)*100}%`;
+  document.getElementById('live-score').textContent = totalScore;
+
+  const body = document.getElementById('quiz-body');
+  body.innerHTML = `
+    <div class="q-enter">
+      <div class="q-category">${q.category}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="options-list" id="options-list">
+        ${q.options.map((o, i) => `
+          <button class="option-btn" onclick="selectOption(this, ${i})">
+            <span>${o.text}</span>
+          </button>
+        `).join('')}
+      </div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+        ${currentQ < questions.length-1 ? 'Next Question →' : 'See My Result 🌿'}
+      </button>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════
+// SELECT OPTION — ALLOWS RE-SELECTION
+// ══════════════════════════════════════
+function selectOption(el, index) {
+  // Always allow re-selection — remove selected from all first
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+
+  // Apply selected to clicked button
+  el.classList.add('selected');
+  selectedIndex = index;
+
+  // Show Next button if not already visible
+  const btn = document.getElementById('btn-next');
+  if (!btn.classList.contains('visible')) {
+    btn.classList.add('visible');
+  }
+
+  // Haptic
+  if (navigator.vibrate) navigator.vibrate(30);
+}
+
+// ══════════════════════════════════════
+// NEXT QUESTION
+// ══════════════════════════════════════
+function nextQuestion() {
+  if (selectedIndex === -1) { showToast('Pick an option first 🌿'); return; }
+
+  const pts = SCORE_MAP[selectedIndex];
+  totalScore += pts;
+  perQuestionScores.push({ q: currentQ, score: pts });
+  perQuestionAnswers.push(questions[currentQ].options[selectedIndex].text);
+
+  currentQ++;
+  if (currentQ < questions.length) {
+    renderQuestion();
+    document.getElementById('screen-quiz').scrollTo({top:0, behavior:'smooth'});
+  } else {
+    finishQuiz();
+  }
+}
+
+// ══════════════════════════════════════
+// FINISH
+// ══════════════════════════════════════
+function finishQuiz() {
+  const persona = personas.find(p => totalScore >= p.min && totalScore <= p.max) || personas[4];
+
+  // Find strongest area (highest score) and opportunity (lowest score)
+  const sorted = [...perQuestionScores].sort((a,b) => b.score - a.score);
+  const strongestArea = areaNames[sorted[0].q];
+  const opportunityArea = areaNames[sorted[sorted.length-1].q];
+
+  // Populate result screen
+  document.getElementById('res-verdict').textContent = persona.verdict;
+  document.getElementById('res-emoji').textContent = persona.emoji;
+  document.getElementById('res-name').innerHTML = `<em>${persona.name}</em>`;
+  document.getElementById('res-score-num').textContent = '0';
+  document.getElementById('res-desc').textContent = persona.desc;
+
+  const traitsEl = document.getElementById('res-traits');
+  traitsEl.innerHTML = persona.traits.map(t => `<div class="trait-chip">${t}</div>`).join('');
+
+  document.getElementById('res-insights').innerHTML = `
+    <div class="insight-row">
+      <div class="insight-icon">💪</div>
+      <div class="insight-content">
+        <div class="insight-label">Strongest Area</div>
+        <div class="insight-text">${strongestArea}</div>
+      </div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-icon">🎯</div>
+      <div class="insight-content">
+        <div class="insight-label">Biggest Opportunity</div>
+        <div class="insight-text">${opportunityArea}</div>
+      </div>
+    </div>
+  `;
+
+  showScreen('screen-result');
+
+  // Animate score ring & counter
+  setTimeout(() => {
+    const pct = totalScore / 100;
+    const circumference = 314;
+    const offset = circumference * (1 - pct);
+    document.getElementById('result-ring').style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.34,1.56,0.64,1)';
+    document.getElementById('result-ring').setAttribute('stroke-dashoffset', offset);
+    animateCount('res-score-num', 0, totalScore, 1200);
+  }, 300);
+
+  // Confetti for high scorers
+  if (totalScore >= 66) {
+    setTimeout(launchConfetti, 600);
+  }
+
+  // Save to Google Sheet (fire & forget)
+  saveToSheet(persona);
+}
+
+// ══════════════════════════════════════
+// SAVE TO GOOGLE SHEET
+// ══════════════════════════════════════
+function saveToSheet(persona) {
+  try {
+    const payload = {
+      timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      name:      brandName,
+      email:     userEmail,
+      score:     totalScore,
+      persona:   persona.name,
+      secret:    CONFIG.SECRET,
+    };
+    // Add each question answer as q1, q2 ... q10
+    perQuestionAnswers.forEach((ans, i) => {
+      payload[`q${i+1}`] = ans;
+    });
+    fetch(CONFIG.GSHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    console.warn('Sheet error:', e);
+  }
+}
+
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+function animateCount(id, from, to, duration) {
+  const el = document.getElementById(id);
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.round(from + (to-from)*ease);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function retake() {
+  currentQ = 0;
+  totalScore = 0;
+  selectedIndex = -1;
+  perQuestionScores = [];
+  perQuestionAnswers = [];
+  document.getElementById('inp-name').value = '';
+  document.getElementById('inp-email').value = '';
+  document.getElementById('inp-name').classList.remove('error');
+  document.getElementById('inp-email').classList.remove('error');
+  document.getElementById('err-name').classList.remove('show');
+  document.getElementById('err-email').classList.remove('show');
+  document.getElementById('result-ring').setAttribute('stroke-dashoffset', 314);
+  showScreen('screen-landing');
+}
+
+function launchConfetti() {
+  const colors = ['#3d6b4a','#c4923a','#a8c8a0','#e8b96a','#f0ebe0','#1e4a2e'];
+  const wrap = document.getElementById('confetti-wrap');
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-p';
+    p.style.cssText = `
+      left: ${Math.random()*100}vw;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      width: ${4+Math.random()*8}px;
+      height: ${4+Math.random()*8}px;
+      border-radius: ${Math.random()>0.5?'50%':'2px'};
+      animation-duration: ${1.5+Math.random()*2}s;
+      animation-delay: ${Math.random()*0.8}s;
+      opacity: ${0.6+Math.random()*0.4};
+    `;
+    wrap.appendChild(p);
+    setTimeout(() => p.remove(), 3500);
+  }
+}
+</script>
+</body>
+</html>
