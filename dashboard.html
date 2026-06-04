@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WV Quiz Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d1f15;
+  --bg2:#122019;
+  --card:#1a2e20;
+  --card2:#1f3526;
+  --border:rgba(255,255,255,0.08);
+  --green:#3d6b4a;
+  --green-light:#a8c8a0;
+  --gold:#e8b96a;
+  --gold2:#c4923a;
+  --white:#ffffff;
+  --text:#e8f0e8;
+  --muted:rgba(255,255,255,0.45);
+  --r:16px;
+}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* ── LOGIN OVERLAY ── */
+#login-overlay{
+  position:fixed;inset:0;
+  background:var(--bg);
+  z-index:100;
+  display:flex;align-items:center;justify-content:center;
+}
+.login-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:48px 40px;
+  width:100%;max-width:380px;
+  text-align:center;
+}
+.login-logo{font-size:32px;margin-bottom:16px;}
+.login-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:700;
+  color:var(--white);margin-bottom:6px;
+}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px;}
+.login-input{
+  width:100%;padding:14px 18px;
+  background:var(--bg2);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;color:var(--white);
+  outline:none;margin-bottom:12px;
+  transition:border-color 0.2s;
+  -webkit-text-security:disc;
+  type:password;
+}
+.login-input:focus{border-color:var(--green);}
+.login-btn{
+  width:100%;padding:14px;
+  background:var(--green);
+  color:var(--white);
+  border:none;border-radius:12px;
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.login-btn:hover{background:#4a7a58;}
+.login-err{
+  font-size:12px;color:#e07070;
+  margin-top:8px;display:none;
+}
+
+/* ── MAIN LAYOUT ── */
+#main{display:none;}
+
+.topbar{
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  padding:20px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:10;
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:700;
+  color:var(--white);
+}
+.topbar-badge{
+  background:rgba(168,200,160,0.15);
+  border:1px solid rgba(168,200,160,0.25);
+  border-radius:20px;padding:3px 12px;
+  font-size:11px;color:var(--green-light);
+  font-weight:500;letter-spacing:0.08em;
+}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.last-updated{font-size:12px;color:var(--muted);}
+.refresh-btn{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:8px;padding:7px 14px;
+  font-size:12px;color:var(--text);
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:background 0.2s;
+}
+.refresh-btn:hover{background:var(--green);}
+
+.content{padding:32px;}
+
+/* ── STAT CARDS ── */
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;margin-bottom:28px;
+}
+.stat-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:24px 20px;
+  position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;
+  top:-30px;right:-30px;
+  width:80px;height:80px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.03);
+}
+.stat-icon{font-size:22px;margin-bottom:12px;}
+.stat-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:44px;font-weight:700;
+  color:var(--white);line-height:1;
+  margin-bottom:4px;
+}
+.stat-label{font-size:12px;color:var(--muted);font-weight:400;}
+.stat-card.gold .stat-val{color:var(--gold);}
+.stat-card.green .stat-val{color:var(--green-light);}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px;}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:24px;
+}
+.card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:600;
+  color:var(--white);margin-bottom:4px;
+}
+.card-sub{font-size:11px;color:var(--muted);margin-bottom:20px;}
+
+/* ── PERSONA BARS ── */
+.persona-bar-wrap{margin-bottom:14px;}
+.persona-bar-top{
+  display:flex;justify-content:space-between;
+  margin-bottom:6px;
+}
+.persona-bar-name{font-size:13px;color:var(--text);}
+.persona-bar-count{font-size:13px;color:var(--muted);}
+.persona-bar-track{
+  height:8px;background:rgba(255,255,255,0.06);
+  border-radius:99px;overflow:hidden;
+}
+.persona-bar-fill{
+  height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--green),var(--green-light));
+  transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* ── Q BREAKDOWN ── */
+.q-block{margin-bottom:20px;}
+.q-block-title{
+  font-size:12px;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--green-light);margin-bottom:10px;
+}
+.q-block-text{
+  font-size:14px;color:var(--text);
+  margin-bottom:12px;font-weight:400;
+  line-height:1.4;
+}
+.ans-bar-wrap{margin-bottom:8px;}
+.ans-bar-top{display:flex;justify-content:space-between;margin-bottom:4px;}
+.ans-text{font-size:12px;color:var(--muted);flex:1;padding-right:12px;line-height:1.3;}
+.ans-pct{font-size:12px;color:var(--text);white-space:nowrap;}
+.ans-track{height:6px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;}
+.ans-fill{height:100%;border-radius:99px;background:var(--green);transition:width 0.6s ease;}
+.ans-fill.top{background:linear-gradient(90deg,var(--gold2),var(--gold));}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead tr{border-bottom:1px solid var(--border);}
+th{
+  font-size:10px;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);padding:10px 14px;
+  text-align:left;white-space:nowrap;
+}
+td{
+  font-size:13px;color:var(--text);
+  padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.score-pill{
+  display:inline-block;
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;
+  background:rgba(168,200,160,0.12);
+  color:var(--green-light);
+}
+.persona-pill{
+  display:inline-block;
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;
+  background:rgba(232,185,106,0.1);
+  color:var(--gold);
+}
+
+/* ── EMPTY / LOADING ── */
+.empty-state{
+  text-align:center;padding:60px 20px;
+  color:var(--muted);font-size:14px;
+}
+.loading-ring{
+  width:36px;height:36px;
+  border:3px solid rgba(255,255,255,0.08);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  margin:0 auto 12px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── LIVE DOT ── */
+.live-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#4caf7d;
+  display:inline-block;margin-right:6px;
+  animation:pulse-live 2s ease-in-out infinite;
+}
+@keyframes pulse-live{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:0.4;transform:scale(0.7);}
+}
+
+/* ── CHART CANVAS ── */
+canvas{max-height:220px;}
+
+@media(max-width:900px){
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .grid-2,.grid-3{grid-template-columns:1fr;}
+  .content{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">🌿</div>
+    <div class="login-title">WV Dashboard</div>
+    <div class="login-sub">Internal access only</div>
+    <input class="login-input" type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkLogin()">
+    <button class="login-btn" onclick="checkLogin()">Enter Dashboard</button>
+    <div class="login-err" id="login-err">Wrong password. Try again.</div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">Weaving Vibes</div>
+      <div class="topbar-badge">Quiz Responses</div>
+    </div>
+    <div class="topbar-right">
+      <span class="last-updated"><span class="live-dot"></span>Live · updated <span id="last-time">just now</span></span>
+      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- STAT CARDS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-val" id="stat-total">—</div>
+        <div class="stat-label">Total Responses</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-val" id="stat-avg">—</div>
+        <div class="stat-label">Average Score</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-val" id="stat-top">—</div>
+        <div class="stat-label">Highest Score</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌱</div>
+        <div class="stat-val" id="stat-persona">—</div>
+        <div class="stat-label">Most Common Persona</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Score Distribution</div>
+        <div class="card-sub">How scores are spread across all respondents</div>
+        <canvas id="chart-scores"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Persona Breakdown</div>
+        <div class="card-sub">Which sustainability tier most brands fall into</div>
+        <canvas id="chart-personas"></canvas>
+      </div>
+    </div>
+
+    <!-- PERSONA BARS -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Persona Distribution</div>
+        <div class="card-sub">Detailed count per tier</div>
+        <div id="persona-bars"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Score Over Time</div>
+        <div class="card-sub">Average score trend as responses come in</div>
+        <canvas id="chart-trend"></canvas>
+      </div>
+    </div>
+
+    <!-- Q BREAKDOWN -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title">Per Question Answer Breakdown</div>
+      <div class="card-sub">Most common answers across all 10 questions</div>
+      <div id="q-breakdown"></div>
+    </div>
+
+    <!-- RESPONSES TABLE -->
+    <div class="card">
+      <div class="card-title">All Responses</div>
+      <div class="card-sub">Every submission — newest first</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Brand</th>
+              <th>Email</th>
+              <th>Score</th>
+              <th>Persona</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody id="responses-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// CONFIG — paste your doGet URL here
+// ══════════════════════════════════════
+const DASHBOARD_PASSWORD = 'WV_DASH_2024';
+const DATA_URL = '/api/data'; // serverless proxy (keeps URL hidden)
+
+// Question texts (short labels for breakdown)
+const Q_LABELS = [
+  'Fabric Sourcing',
+  'Hemp Awareness',
+  'Supply Chain',
+  'Buying Decisions',
+  'Waste & Deadstock',
+  'Sustainability Talk',
+  'Production Volumes',
+  'Real Commitment',
+  'Customer Comms',
+  'Where You Stand'
+];
+
+const Q_TEXTS = [
+  'When sourcing fabrics, what matters most to you?',
+  'How familiar are you with hemp as a textile material?',
+  'How transparent is your supply chain today?',
+  'How do you currently make fabric sourcing decisions?',
+  'What happens to your leftover fabric or deadstock?',
+  'When a customer asks "is this sustainable?" — what can you tell them?',
+  'How does your brand approach production volumes?',
+  'Have you ever chosen a fabric for sustainability reasons — even if it cost more?',
+  'How do you talk about sustainability to your customers?',
+  'Where does your brand honestly sit on the sustainability journey?'
+];
+
+const PERSONA_ORDER = [
+  'The Starting Point',
+  'The Aware Brand',
+  'The Evolving Brand',
+  'The Responsible Brand',
+  'The Future-Forward Brand'
+];
+
+// ══════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════
+function checkLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === DASHBOARD_PASSWORD) {
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+    loadData();
+    // Auto refresh every 60 seconds
+    setInterval(loadData, 60000);
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+
+// ══════════════════════════════════════
+// LOAD DATA
+// ══════════════════════════════════════
+let scoreChart, personaChart, trendChart;
+
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL);
+    const json = await res.json();
+    const rows = json.rows || [];
+    renderDashboard(rows);
+    document.getElementById('last-time').textContent = new Date().toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
+  } catch(e) {
+    console.error('Data fetch error:', e);
+  }
+}
+
+// ══════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════
+function renderDashboard(rows) {
+  if (!rows.length) {
+    showEmpty();
+    return;
+  }
+
+  const scores   = rows.map(r => Number(r.score)).filter(s => !isNaN(s));
+  const personas = rows.map(r => r.persona).filter(Boolean);
+  const avg      = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+  const top      = scores.length ? Math.max(...scores) : 0;
+
+  // Persona frequency
+  const personaCount = {};
+  PERSONA_ORDER.forEach(p => personaCount[p] = 0);
+  personas.forEach(p => { if (personaCount[p] !== undefined) personaCount[p]++; });
+  const topPersona = Object.entries(personaCount).sort((a,b)=>b[1]-a[1])[0];
+
+  // Stat cards
+  document.getElementById('stat-total').textContent   = rows.length;
+  document.getElementById('stat-avg').textContent     = avg;
+  document.getElementById('stat-top').textContent     = top;
+  document.getElementById('stat-persona').textContent = topPersona ? topPersona[0].replace('The ','') : '—';
+
+  // Charts
+  renderScoreChart(scores);
+  renderPersonaChart(personaCount);
+  renderTrendChart(rows);
+  renderPersonaBars(personaCount, rows.length);
+  renderQBreakdown(rows);
+  renderTable(rows);
+}
+
+// ── SCORE DISTRIBUTION CHART ──
+function renderScoreChart(scores) {
+  const buckets = [0,0,0,0,0]; // 0-20, 21-40, 41-65, 66-85, 86-100
+  scores.forEach(s => {
+    if (s <= 20) buckets[0]++;
+    else if (s <= 40) buckets[1]++;
+    else if (s <= 65) buckets[2]++;
+    else if (s <= 85) buckets[3]++;
+    else buckets[4]++;
+  });
+
+  const ctx = document.getElementById('chart-scores');
+  if (scoreChart) scoreChart.destroy();
+  scoreChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['0–20','21–40','41–65','66–85','86–100'],
+      datasets: [{
+        data: buckets,
+        backgroundColor: ['rgba(168,200,160,0.3)','rgba(168,200,160,0.45)','rgba(168,200,160,0.6)','rgba(168,200,160,0.8)','rgba(232,185,106,0.9)'],
+        borderColor: ['#a8c8a0','#a8c8a0','#a8c8a0','#a8c8a0','#e8b96a'],
+        borderWidth: 1,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.45)',font:{size:11}}},
+        y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.45)',font:{size:11},stepSize:1}}
+      }
+    }
+  });
+}
+
+// ── PERSONA DOUGHNUT ──
+function renderPersonaChart(personaCount) {
+  const ctx = document.getElementById('chart-personas');
+  const labels = PERSONA_ORDER.map(p => p.replace('The ',''));
+  const data   = PERSONA_ORDER.map(p => personaCount[p] || 0);
+  const colors = ['#2d5a3a','#3d6b4a','#a8c8a0','#c4923a','#e8b96a'];
+
+  if (personaChart) personaChart.destroy();
+  personaChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets:[{data, backgroundColor:colors, borderColor:'#1a2e20', borderWidth:3}]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:true,
+      cutout:'68%',
+      plugins:{
+        legend:{
+          position:'bottom',
+          labels:{color:'rgba(255,255,255,0.6)',font:{size:11},padding:12,boxWidth:10}
+        }
+      }
+    }
+  });
+}
+
+// ── TREND CHART ──
+function renderTrendChart(rows) {
+  const ctx = document.getElementById('chart-trend');
+  // Running average
+  let runningSum = 0;
+  const trendData = rows.map((r, i) => {
+    runningSum += Number(r.score) || 0;
+    return { x: i+1, y: Math.round(runningSum/(i+1)) };
+  });
+
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets:[{
+        data: trendData,
+        borderColor:'#e8b96a',
+        backgroundColor:'rgba(232,185,106,0.08)',
+        borderWidth:2,
+        pointRadius:3,
+        pointBackgroundColor:'#e8b96a',
+        fill:true,
+        tension:0.4,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.45)',font:{size:11}}},
+        y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.45)',font:{size:11}},min:0,max:100}
+      }
+    }
+  });
+}
+
+// ── PERSONA BARS ──
+function renderPersonaBars(personaCount, total) {
+  const el = document.getElementById('persona-bars');
+  el.innerHTML = PERSONA_ORDER.map(p => {
+    const count = personaCount[p] || 0;
+    const pct   = total ? Math.round((count/total)*100) : 0;
+    return `
+      <div class="persona-bar-wrap">
+        <div class="persona-bar-top">
+          <span class="persona-bar-name">${p}</span>
+          <span class="persona-bar-count">${count} · ${pct}%</span>
+        </div>
+        <div class="persona-bar-track">
+          <div class="persona-bar-fill" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Q BREAKDOWN ──
+function renderQBreakdown(rows) {
+  const el = document.getElementById('q-breakdown');
+  let html = '';
+
+  for (let i = 0; i < 10; i++) {
+    const key = `q${i+1}`;
+    const answers = rows.map(r => r[key]).filter(Boolean);
+    if (!answers.length) continue;
+
+    // Count frequency
+    const freq = {};
+    answers.forEach(a => { freq[a] = (freq[a]||0)+1; });
+    const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+    const topAns = sorted[0]?.[0];
+
+    html += `
+      <div class="q-block">
+        <div class="q-block-title">Q${i+1} — ${Q_LABELS[i]}</div>
+        <div class="q-block-text">${Q_TEXTS[i]}</div>
+        ${sorted.map(([ans, count], idx) => {
+          const pct = Math.round((count/answers.length)*100);
+          return `
+            <div class="ans-bar-wrap">
+              <div class="ans-bar-top">
+                <span class="ans-text">${ans}</span>
+                <span class="ans-pct">${pct}%</span>
+              </div>
+              <div class="ans-track">
+                <div class="ans-fill ${idx===0?'top':''}" style="width:${pct}%"></div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+      ${i < 9 ? '<hr style="border:none;border-top:1px solid rgba(255,255,255,0.06);margin:20px 0;">' : ''}
+    `;
+  }
+  el.innerHTML = html || '<div class="empty-state">No answer data yet.</div>';
+}
+
+// ── TABLE ──
+function renderTable(rows) {
+  const el = document.getElementById('responses-table');
+  const sorted = [...rows].reverse(); // newest first
+  el.innerHTML = sorted.map((r, i) => `
+    <tr>
+      <td style="color:var(--muted)">${rows.length - i}</td>
+      <td style="font-weight:500">${r.name || '—'}</td>
+      <td style="color:var(--muted)">${r.email || '—'}</td>
+      <td><span class="score-pill">${r.score || 0}</span></td>
+      <td><span class="persona-pill">${(r.persona||'').replace('The ','')}</span></td>
+      <td style="color:var(--muted);font-size:12px">${r.timestamp || '—'}</td>
+    </tr>
+  `).join('');
+}
+
+function showEmpty() {
+  document.getElementById('stat-total').textContent = '0';
+  document.getElementById('stat-avg').textContent   = '—';
+  document.getElementById('stat-top').textContent   = '—';
+  document.getElementById('stat-persona').textContent = '—';
+  document.getElementById('q-breakdown').innerHTML  = '<div class="empty-state">No responses yet. Share the quiz link to get started.</div>';
+  document.getElementById('responses-table').innerHTML = '<tr><td colspan="6"><div class="empty-state">No responses yet.</div></td></tr>';
+}
+</script>
+</body>
+</html>
