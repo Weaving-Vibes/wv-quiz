@@ -41,6 +41,21 @@ body {
   position: relative;
 }
 
+/* On laptop/desktop viewports, center the experience as a phone-width card
+   instead of letting it stretch edge-to-edge. Mobile (<=480px) is untouched. */
+@media (min-width: 481px) {
+  body {
+    background: #0a1a12;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 30%, rgba(30,74,46,0.35) 0%, transparent 70%);
+    z-index: 0;
+  }
+}
+
 /* ── SCREEN SYSTEM ── */
 .screen {
   position: fixed;
@@ -64,6 +79,22 @@ body {
   opacity: 0;
   transform: translateX(-30px);
   pointer-events: none;
+}
+
+@media (min-width: 481px) {
+  .screen {
+    max-width: 480px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    box-shadow: 0 0 80px rgba(0,0,0,0.5);
+  }
+  .screen.active {
+    transform: translateX(-50%);
+  }
+  .screen.exit {
+    transform: translateX(calc(-50% - 30px));
+  }
 }
 
 /* ── LANDING SCREEN ── */
@@ -100,7 +131,7 @@ body {
 }
 
 .landing-top {
-  padding: 52px 28px 0;
+  padding: 44px 28px 0;
   flex: 1;
 }
 
@@ -112,7 +143,7 @@ body {
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 40px;
   padding: 6px 14px 6px 10px;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
 }
 
 .wv-pill-dot {
@@ -137,7 +168,7 @@ body {
 
 .landing-headline {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 46px;
+  font-size: 40px;
   font-weight: 700;
   line-height: 1.08;
   color: var(--white);
@@ -150,18 +181,18 @@ body {
 }
 
 .landing-sub {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 300;
   color: rgba(255,255,255,0.55);
-  line-height: 1.65;
-  margin-bottom: 44px;
+  line-height: 1.6;
+  margin-bottom: 28px;
   max-width: 300px;
 }
 
 .leaf-row {
   display: flex;
   gap: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
 }
 
 .leaf-tag {
@@ -180,7 +211,7 @@ body {
 .form-card {
   background: var(--cream);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
-  padding: 36px 28px 40px;
+  padding: 32px 28px 36px;
   position: relative;
 }
 
@@ -195,7 +226,7 @@ body {
 
 .form-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   color: var(--green-deep);
   margin-bottom: 6px;
@@ -206,12 +237,12 @@ body {
   font-size: 12px;
   color: var(--text-light);
   font-weight: 300;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
   line-height: 1.5;
 }
 
 .field {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .field label {
@@ -224,9 +255,18 @@ body {
   margin-bottom: 8px;
 }
 
-.field input {
+.field label .opt-tag {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: var(--cream3);
+  font-size: 10px;
+}
+
+.field input,
+.field select {
   width: 100%;
-  padding: 16px 18px;
+  padding: 15px 18px;
   border: 1.5px solid var(--cream3);
   border-radius: 14px;
   background: var(--white);
@@ -238,12 +278,28 @@ body {
   -webkit-appearance: none;
 }
 
-.field input:focus {
+.field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%237a806a'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 44px;
+  color: var(--text-dark);
+}
+
+.field select.placeholder-active {
+  color: var(--cream3);
+}
+
+.field input:focus,
+.field select:focus {
   border-color: var(--green-light);
   box-shadow: 0 0 0 3px rgba(61,107,74,0.1);
 }
 
-.field input.error {
+.field input.error,
+.field select.error {
   border-color: #c0392b;
   box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
 }
@@ -259,6 +315,33 @@ body {
 .field-error.show { display: block; }
 
 .field input::placeholder { color: var(--cream3); }
+
+.field-row {
+  display: flex;
+  gap: 10px;
+}
+.field-row .field { flex: 1; margin-bottom: 14px; }
+
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -2px 0 14px;
+}
+.or-divider::before,
+.or-divider::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: var(--cream3);
+}
+.or-divider span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
 
 .btn-start {
   width: 100%;
@@ -477,13 +560,30 @@ body {
   z-index: 0;
 }
 
+@media (min-width: 481px) {
+  .result-bg {
+    max-width: 480px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+
 .result-inner {
   position: relative;
   z-index: 1;
-  padding: 60px 24px 52px;
+  padding: 44px 22px 36px;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 380px) {
+  .result-inner { padding: 36px 18px 28px; }
+  .persona-name { font-size: 30px; }
+  .persona-emoji { font-size: 52px; margin: 10px 0 8px; }
+  .score-ring-wrap { width: 104px; height: 104px; margin: 12px auto 16px; }
+  .persona-desc { font-size: 13px; }
 }
 
 .result-eyebrow {
@@ -539,7 +639,7 @@ body {
   position: relative;
 }
 
-.score-ring-wrap svg { transform: rotate(-90deg); }
+.score-ring-wrap svg { transform: rotate(-90deg); width: 100%; height: 100%; }
 
 .score-ring-inner {
   position: absolute;
@@ -622,6 +722,28 @@ body {
   line-height: 1.5;
 }
 
+/* cta card */
+.cta-card {
+  background: rgba(196,146,58,0.1);
+  border: 1px solid rgba(196,146,58,0.25);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.cta-icon {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.cta-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
 /* traits */
 .traits-row {
   display: flex;
@@ -690,6 +812,15 @@ body {
   overflow: hidden;
 }
 
+@media (min-width: 481px) {
+  .confetti-wrap {
+    max-width: 480px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+
 .confetti-p {
   position: absolute;
   top: -10px;
@@ -735,17 +866,38 @@ body {
 
     <div class="form-card">
       <div class="form-title">Let's get started</div>
-      <div class="form-hint">Enter your brand details to begin the assessment.</div>
+      <div class="form-hint">Enter your details to begin the assessment.</div>
 
       <div class="field">
-        <label>Brand Name</label>
-        <input type="text" id="inp-name" placeholder="e.g. Kala Studio" autocomplete="organization" inputmode="text">
-        <div class="field-error" id="err-name">Please enter your brand name</div>
+        <label>Name</label>
+        <input type="text" id="inp-name" placeholder="e.g. Rhea Sharma" autocomplete="name" inputmode="text">
+        <div class="field-error" id="err-name">Please enter your name</div>
       </div>
+
       <div class="field">
-        <label>Email Address</label>
+        <label>Email Address <span class="opt-tag">(email or phone required)</span></label>
         <input type="email" id="inp-email" placeholder="you@yourbrand.com" autocomplete="email" inputmode="email">
-        <div class="field-error" id="err-email">Please enter a valid email address</div>
+      </div>
+
+      <div class="or-divider"><span>or</span></div>
+
+      <div class="field">
+        <label>Phone Number <span class="opt-tag">(email or phone required)</span></label>
+        <input type="tel" id="inp-number" placeholder="10-digit mobile number" autocomplete="tel" inputmode="numeric" maxlength="10">
+      </div>
+      <div class="field-error" id="err-contact">Please enter a valid email or a 10-digit phone number</div>
+
+      <div class="field">
+        <label>What describes you best?</label>
+        <select id="inp-business-type" class="placeholder-active" onchange="this.classList.toggle('placeholder-active', this.value==='')">
+          <option value="" disabled selected>Select an option</option>
+          <option value="Independent Fashion Brand">Independent Fashion Brand</option>
+          <option value="Designer Label">Designer Label</option>
+          <option value="Export House">Export House</option>
+          <option value="Garment Manufacturer">Garment Manufacturer</option>
+          <option value="Buying House / Sourcing Office">Buying House / Sourcing Office</option>
+        </select>
+        <div class="field-error" id="err-business-type">Please select what describes you best</div>
       </div>
 
       <button class="btn-start" onclick="startQuiz()">
@@ -816,7 +968,10 @@ body {
       <div class="persona-desc" id="res-desc"></div>
     </div>
 
-    <div class="insight-card" id="res-insights"></div>
+    <div class="cta-card">
+      <div class="cta-icon">🌿</div>
+      <div class="cta-text">Want to improve your score?<br>Explore hemp, hemp blends, bamboo, and other low-impact fabrics by Weaving Vibes</div>
+    </div>
 
     <button class="btn-retake" onclick="retake()">↩ Retake Assessment</button>
   </div>
@@ -827,190 +982,191 @@ body {
 // CONFIG
 // ══════════════════════════════════════
 const CONFIG = {
-  SUBMIT_URL: '/api/submit',
+  SUBMIT_URL: 'https://script.google.com/macros/s/AKfycbyuD1ySViLJTPRc4bOBMG8V9PH_SFn691txGckBLx0hDaTV827Xo63jZ0q3Fq7KfSNwTw/exec',
+  SECRET: 'WV_QUIZ_2024',
 };
 
 // ══════════════════════════════════════
-// SCORING MAP: option index (0-3) → points
-// A=0, B=3, C=7, D=10  (max 100)
+// QUIZ DATA — one question set per business type
+// Each option now carries its own `score` (0/3/7/10) so display
+// order can be mixed up per question without touching scoring logic.
 // ══════════════════════════════════════
-const SCORE_MAP = [0, 3, 7, 10];
+const QUESTION_SETS = {
+
+  'Independent Fashion Brand': [
+    { category:'Fibre Choice', text:'What percentage of your collection uses preferred fibres (Hemp, Organic Cotton, Linen, TENCEL™, etc.)?',
+      options:[ {icon:'🌱',text:'50–75%',score:7}, {icon:'🧵',text:'<25%',score:0}, {icon:'🌿',text:'75%+',score:10}, {icon:'🌾',text:'25–50%',score:3} ] },
+    { category:'Fabric Sourcing', text:'How important is sustainability when choosing fabrics?',
+      options:[ {icon:'⚖️',text:'Equal to quality & price',score:7}, {icon:'🌿',text:'Primary decision',score:10}, {icon:'🤷',text:'Rarely considered',score:0}, {icon:'👀',text:'Considered occasionally',score:3} ] },
+    { category:'Certifications', text:'Do you ask suppliers for certifications?',
+      options:[ {icon:'✅',text:'Always',score:10}, {icon:'🤔',text:'Sometimes',score:3}, {icon:'📋',text:'Frequently',score:7}, {icon:'❌',text:'Never',score:0} ] },
+    { category:'Traceability', text:'Can you trace where your fabrics are made?',
+      options:[ {icon:'📍',text:'Most suppliers',score:7}, {icon:'❓',text:'No',score:0}, {icon:'📊',text:'Complete traceability',score:10}, {icon:'🗺️',text:'Some suppliers',score:3} ] },
+    { category:'Materials', text:'Do you actively avoid virgin polyester where alternatives exist?',
+      options:[ {icon:'🤏',text:'Occasionally',score:3}, {icon:'✅',text:'Yes',score:10}, {icon:'❌',text:'No',score:0}, {icon:'👍',text:'Mostly',score:7} ] },
+    { category:'Waste & Deadstock', text:'How do you deal with deadstock fabric?',
+      options:[ {icon:'🔄',text:'Reuse or redesign',score:10}, {icon:'📦',text:'Store',score:3}, {icon:'🗑️',text:'Discard',score:0}, {icon:'💸',text:'Sell',score:7} ] },
+    { category:'Customer Communication', text:'Do you communicate fabric sustainability to customers?',
+      options:[ {icon:'🏷️',text:'Selected products',score:7}, {icon:'🔇',text:'Never',score:0}, {icon:'📣',text:'Every product',score:10}, {icon:'💬',text:'Occasionally',score:3} ] },
+    { category:'Impact Measurement', text:'Do you measure the environmental impact of your fabrics?',
+      options:[ {icon:'✅',text:'Yes',score:10}, {icon:'📊',text:'Partially',score:7}, {icon:'❌',text:'No',score:0}, {icon:'🕐',text:'Planning to',score:3} ] },
+    { category:'Innovation', text:'How often do you introduce better materials?',
+      options:[ {icon:'📅',text:'Every year',score:7}, {icon:'🌿',text:'Every collection',score:10}, {icon:'🤏',text:'Occasionally',score:3}, {icon:'❌',text:'Never',score:0} ] },
+    { category:'Product Longevity', text:'Is longevity part of your product design philosophy?',
+      options:[ {icon:'❌',text:'Rarely',score:0}, {icon:'✅',text:'Always',score:10}, {icon:'🤏',text:'Sometimes',score:3}, {icon:'👍',text:'Mostly',score:7} ] },
+  ],
+
+  'Designer Label': [
+    { category:'Design Process', text:'How early do you decide your fabric story?',
+      options:[ {icon:'✏️',text:'During design',score:7}, {icon:'⏰',text:'After costing',score:0}, {icon:'🎯',text:'Before design begins',score:10}, {icon:'🧪',text:'During sampling',score:3} ] },
+    { category:'Client Demand', text:'How often do clients request sustainable materials?',
+      options:[ {icon:'📈',text:'Frequently',score:7}, {icon:'❌',text:'Rarely',score:0}, {icon:'🌿',text:'Almost every project',score:10}, {icon:'🤏',text:'Occasionally',score:3} ] },
+    { category:'Fabric Selection', text:'Which factor influences your fabric selection most?',
+      options:[ {icon:'🎨',text:'Aesthetics',score:7}, {icon:'🌿',text:'Sustainability & quality',score:10}, {icon:'📦',text:'Availability',score:0}, {icon:'💰',text:'Cost',score:3} ] },
+    { category:'Materials Innovation', text:'Do you experiment with regenerative fibres?',
+      options:[ {icon:'🔬',text:'Sometimes',score:7}, {icon:'❌',text:'Never',score:0}, {icon:'🌱',text:'Frequently',score:10}, {icon:'🤏',text:'Rarely',score:3} ] },
+    { category:'Supplier Collaboration', text:'Can suppliers develop custom sustainable fabrics?',
+      options:[ {icon:'✅',text:'Always',score:10}, {icon:'❌',text:'Rarely',score:0}, {icon:'👍',text:'Usually',score:7}, {icon:'🤏',text:'Occasionally',score:3} ] },
+    { category:'Impact Awareness', text:'Do you know the environmental impact of your chosen fabrics?',
+      options:[ {icon:'📊',text:'Partially',score:7}, {icon:'✅',text:'Yes',score:10}, {icon:'🤷',text:'Very little',score:3}, {icon:'❌',text:'No',score:0} ] },
+    { category:'Documentation', text:'Do you specify certified fabrics in your tech packs?',
+      options:[ {icon:'❌',text:'Never',score:0}, {icon:'📋',text:'Often',score:7}, {icon:'✅',text:'Always',score:10}, {icon:'🤏',text:'Sometimes',score:3} ] },
+    { category:'Biodegradability', text:'What percentage of your collection is biodegradable?',
+      options:[ {icon:'🌾',text:'25–50%',score:3}, {icon:'🌿',text:'75%+',score:10}, {icon:'🧵',text:'<25%',score:0}, {icon:'🌱',text:'50–75%',score:7} ] },
+    { category:'Durability', text:'How important is fabric durability?',
+      options:[ {icon:'👍',text:'Important',score:7}, {icon:'❌',text:'Low',score:0}, {icon:'🤏',text:'Moderate',score:3}, {icon:'✅',text:'Critical',score:10} ] },
+    { category:'Real Commitment', text:'Would you switch fabrics for a lower-impact option if quality remained the same?',
+      options:[ {icon:'✅',text:'Definitely',score:10}, {icon:'🤔',text:'Maybe',score:3}, {icon:'❌',text:'No',score:0}, {icon:'👍',text:'Probably',score:7} ] },
+  ],
+
+  'Export House': [
+    { category:'Buyer Demand', text:'What percentage of buyer enquiries include sustainability requirements?',
+      options:[ {icon:'🌿',text:'75%+',score:10}, {icon:'🌾',text:'25–50%',score:3}, {icon:'🧵',text:'<25%',score:0}, {icon:'🌱',text:'50–75%',score:7} ] },
+    { category:'Sourcing Strategy', text:'Are preferred fibres part of your sourcing strategy?',
+      options:[ {icon:'🏢',text:'Company-wide',score:10}, {icon:'🎯',text:'For key customers',score:7}, {icon:'❌',text:'No',score:0}, {icon:'🤏',text:'Occasionally',score:3} ] },
+    { category:'Certified Sourcing', text:'How much of your sourcing is certified?',
+      options:[ {icon:'🧵',text:'<25%',score:0}, {icon:'🌱',text:'50–75%',score:7}, {icon:'🌾',text:'25–50%',score:3}, {icon:'🌿',text:'75%+',score:10} ] },
+    { category:'Traceability', text:'Can you trace fabrics back to the mill?',
+      options:[ {icon:'📍',text:'Mostly',score:7}, {icon:'📊',text:'Completely',score:10}, {icon:'🗺️',text:'Partially',score:3}, {icon:'❌',text:'No',score:0} ] },
+    { category:'Supplier Programme', text:'Do you have an approved supplier sustainability programme?',
+      options:[ {icon:'🚧',text:'In progress',score:7}, {icon:'❌',text:'No',score:0}, {icon:'✅',text:'Yes',score:10}, {icon:'🤏',text:'Limited',score:3} ] },
+    { category:'Supplier Audits', text:'How often are suppliers audited?',
+      options:[ {icon:'✅',text:'Annually',score:10}, {icon:'📅',text:'Every 2–3 years',score:7}, {icon:'❌',text:'Never',score:0}, {icon:'🤏',text:'On request',score:3} ] },
+    { category:'Waste Management', text:'How is production waste managed?',
+      options:[ {icon:'📦',text:'Reused',score:7}, {icon:'🔄',text:'Recycled',score:10}, {icon:'🗑️',text:'Disposed',score:0}, {icon:'💸',text:'Sold as scrap',score:3} ] },
+    { category:'Buyer Data Requests', text:'Do buyers request carbon or environmental data?',
+      options:[ {icon:'📊',text:'Sometimes',score:7}, {icon:'❌',text:'Never',score:0}, {icon:'📈',text:'Frequently',score:10}, {icon:'🤏',text:'Rarely',score:3} ] },
+    { category:'Barriers', text:'What limits greater use of sustainable fabrics?',
+      options:[ {icon:'⏱️',text:'Lead time',score:7}, {icon:'💰',text:'Cost',score:0}, {icon:'🙋',text:'Buyer demand',score:10}, {icon:'📦',text:'MOQ',score:3} ] },
+    { category:'Internal Accountability', text:'Is sustainable sourcing a KPI for your merchandising team?',
+      options:[ {icon:'🏢',text:'Department-wise',score:7}, {icon:'✅',text:'Yes',score:10}, {icon:'❌',text:'No',score:0}, {icon:'🤏',text:'Informally',score:3} ] },
+  ],
+
+  'Garment Manufacturer': [
+    { category:'Fabric Utilization', text:'Do you optimize fabric utilization before production?',
+      options:[ {icon:'👍',text:'Most orders',score:7}, {icon:'❌',text:'Never',score:0}, {icon:'✅',text:'Every order',score:10}, {icon:'🤏',text:'Sometimes',score:3} ] },
+    { category:'Efficiency', text:'Average fabric utilization efficiency?',
+      options:[ {icon:'🌱',text:'85–90%',score:7}, {icon:'🧵',text:'<80%',score:0}, {icon:'🌿',text:'90%+',score:10}, {icon:'🌾',text:'80–85%',score:3} ] },
+    { category:'Waste Management', text:'How is cutting waste managed?',
+      options:[ {icon:'♻️',text:'Upcycled',score:7}, {icon:'🗑️',text:'Disposed',score:0}, {icon:'🔄',text:'Recycled',score:10}, {icon:'💸',text:'Sold',score:3} ] },
+    { category:'Customer Requests', text:'Do customers request certified fabrics?',
+      options:[ {icon:'📈',text:'Frequently',score:7}, {icon:'✅',text:'Almost always',score:10}, {icon:'❌',text:'Rarely',score:0}, {icon:'🤏',text:'Sometimes',score:3} ] },
+    { category:'Direct Sourcing', text:'Do you source directly from mills?',
+      options:[ {icon:'👍',text:'Sometimes',score:7}, {icon:'❌',text:'Never',score:0}, {icon:'✅',text:'Mostly',score:10}, {icon:'🤏',text:'Rarely',score:3} ] },
+    { category:'Verification', text:'Can you verify fibre composition?',
+      options:[ {icon:'👍',text:'Most orders',score:7}, {icon:'❌',text:'No',score:0}, {icon:'✅',text:'Every order',score:10}, {icon:'🤏',text:'Sometimes',score:3} ] },
+    { category:'Chemical Safety', text:'Are restricted chemicals monitored?',
+      options:[ {icon:'📊',text:'Frequently',score:7}, {icon:'✅',text:'Every production lot',score:10}, {icon:'❌',text:'Never',score:0}, {icon:'🤏',text:'Occasionally',score:3} ] },
+    { category:'Sustainable Production', text:'What percentage of your production uses sustainable fabrics?',
+      options:[ {icon:'🌱',text:'50–75%',score:7}, {icon:'🧵',text:'<25%',score:0}, {icon:'🌿',text:'75%+',score:10}, {icon:'🌾',text:'25–50%',score:3} ] },
+    { category:'Innovation Demand', text:'How often do clients ask for fabric innovation?',
+      options:[ {icon:'📈',text:'Frequently',score:7}, {icon:'❌',text:'Rarely',score:0}, {icon:'🌿',text:'Every season',score:10}, {icon:'🤏',text:'Occasionally',score:3} ] },
+    { category:'Internal Review', text:'Are sustainability metrics reviewed internally?',
+      options:[ {icon:'📅',text:'Annually',score:7}, {icon:'❌',text:'Never',score:0}, {icon:'✅',text:'Regularly',score:10}, {icon:'🤏',text:'Occasionally',score:3} ] },
+  ],
+
+  'Buying House / Sourcing Office': [
+    { category:'Supplier Approval', text:'Is sustainability part of supplier approval?',
+      options:[ {icon:'👍',text:'Important',score:7}, {icon:'❌',text:'Not required',score:0}, {icon:'✅',text:'Mandatory',score:10}, {icon:'🤏',text:'Preferred',score:3} ] },
+    { category:'Vendor Selection', text:'How much weight does sustainability carry during vendor selection?',
+      options:[ {icon:'📊',text:'25–50%',score:7}, {icon:'❌',text:'None',score:0}, {icon:'✅',text:'50%+',score:10}, {icon:'🤏',text:'<25%',score:3} ] },
+    { category:'Traceability', text:'Can your vendors provide complete traceability?',
+      options:[ {icon:'👍',text:'Many',score:7}, {icon:'❌',text:'None',score:0}, {icon:'✅',text:'Most',score:10}, {icon:'🤏',text:'Few',score:3} ] },
+    { category:'Client Requests', text:'How frequently do clients request preferred fibres?',
+      options:[ {icon:'📈',text:'Often',score:7}, {icon:'❌',text:'Rarely',score:0}, {icon:'🌿',text:'Every season',score:10}, {icon:'🤏',text:'Occasionally',score:3} ] },
+    { category:'Certifications', text:'Which certification is most commonly requested?',
+      options:[ {icon:'📋',text:'One certification',score:7}, {icon:'❌',text:'None',score:0}, {icon:'✅',text:'GOTS / GRS / OEKO-TEX® or equivalent',score:10}, {icon:'🤏',text:'Occasionally',score:3} ] },
+    { category:'Performance Review', text:'Do you review supplier environmental performance?',
+      options:[ {icon:'📅',text:'Annual reviews',score:7}, {icon:'❌',text:'Never',score:0}, {icon:'✅',text:'Every audit',score:10}, {icon:'🤏',text:'Occasionally',score:3} ] },
+    { category:'Progress Tracking', text:'Do you track supplier improvements over time?',
+      options:[ {icon:'📊',text:'Partially',score:7}, {icon:'❌',text:'No',score:0}, {icon:'✅',text:'Yes',score:10}, {icon:'🤏',text:'Informally',score:3} ] },
+    { category:'Sourcing Challenges', text:'What is the biggest sourcing challenge?',
+      options:[ {icon:'⏱️',text:'Lead time',score:7}, {icon:'💰',text:'Cost',score:0}, {icon:'🔍',text:'Availability',score:10}, {icon:'📦',text:'MOQ',score:3} ] },
+    { category:'Recommendations', text:'Are lower-impact fibres recommended during sourcing?',
+      options:[ {icon:'📈',text:'Often',score:7}, {icon:'❌',text:'Rarely',score:0}, {icon:'✅',text:'Always',score:10}, {icon:'🤏',text:'Sometimes',score:3} ] },
+    { category:'Openness to Change', text:'Would you onboard a new mill offering innovative sustainable fabrics if it met your commercial requirements?',
+      options:[ {icon:'👍',text:'Probably',score:7}, {icon:'❌',text:'Unlikely',score:0}, {icon:'✅',text:'Definitely',score:10}, {icon:'🤔',text:'Maybe',score:3} ] },
+  ],
+
+};
 
 // ══════════════════════════════════════
-// QUIZ DATA
-// ══════════════════════════════════════
-const questions = [
-  {
-    category: 'Fabric Sourcing',
-    text: 'When sourcing fabrics, what matters most to you?',
-    options: [
-      { label:'A', icon:'💰', text:'Price and availability above all' },
-      { label:'B', icon:'🎨', text:'Quality and aesthetics first' },
-      { label:'C', icon:'⚖️', text:'A balance of quality, cost and sustainability' },
-      { label:'D', icon:'🌿', text:'Material origin, impact and traceability' },
-    ]
-  },
-  {
-    category: 'Hemp & Natural Fabrics',
-    text: 'How familiar are you with hemp as a textile material?',
-    options: [
-      { label:'A', icon:'🤷', text:'Never really considered it' },
-      { label:'B', icon:'👂', text:'I\'ve heard of it but don\'t know much' },
-      { label:'C', icon:'📖', text:'I know the basics — natural, durable, eco-friendly' },
-      { label:'D', icon:'🔬', text:'I understand its properties, certifications and use cases deeply' },
-    ]
-  },
-  {
-    category: 'Supply Chain',
-    text: 'How transparent is your supply chain today?',
-    options: [
-      { label:'A', icon:'❓', text:'We buy from a manufacturer — that\'s all we track' },
-      { label:'B', icon:'🗺️', text:'We know our vendors at a surface level' },
-      { label:'C', icon:'🧶', text:'We track sourcing till yarn/fiber stage' },
-      { label:'D', icon:'📋', text:'Fully traceable with documentation end-to-end' },
-    ]
-  },
-  {
-    category: 'Buying Decisions',
-    text: 'How do you currently make fabric sourcing decisions?',
-    options: [
-      { label:'A', icon:'⚡', text:'Whoever gives the best price and fastest delivery' },
-      { label:'B', icon:'🧑‍🎨', text:'Based on what our designer or merchandiser picks' },
-      { label:'C', icon:'🔍', text:'Based on fabric properties, certifications and brand fit' },
-      { label:'D', icon:'🤝', text:'Through research, sampling, supplier audits and long-term partnerships' },
-    ]
-  },
-  {
-    category: 'Waste & Deadstock',
-    text: 'What happens to your leftover fabric or deadstock?',
-    options: [
-      { label:'A', icon:'🗑️', text:'It usually gets discarded' },
-      { label:'B', icon:'📦', text:'Stored, sometimes reused if possible' },
-      { label:'C', icon:'💸', text:'Sold off or donated' },
-      { label:'D', icon:'🔄', text:'Integrated into a circular or zero-waste system' },
-    ]
-  },
-  {
-    category: 'Talking Sustainability',
-    text: 'When a customer asks "is this sustainable?" — what can you tell them?',
-    options: [
-      { label:'A', icon:'😅', text:'Honestly, not much' },
-      { label:'B', icon:'💬', text:'We say it\'s good quality and natural' },
-      { label:'C', icon:'🏷️', text:'We explain the material and where it\'s from' },
-      { label:'D', icon:'📊', text:'We share certifications, sourcing story and environmental impact data' },
-    ]
-  },
-  {
-    category: 'Production',
-    text: 'How does your brand approach production volumes?',
-    options: [
-      { label:'A', icon:'🏭', text:'Large bulk based on forecasts' },
-      { label:'B', icon:'📅', text:'Seasonal production, some overstock happens' },
-      { label:'C', icon:'🔢', text:'Small batches with controlled inventory' },
-      { label:'D', icon:'🎯', text:'Demand-based or made-to-order only' },
-    ]
-  },
-  {
-    category: 'Real Commitment',
-    text: 'Have you ever chosen a fabric for sustainability reasons — even if it cost more?',
-    options: [
-      { label:'A', icon:'❌', text:'No, cost always wins' },
-      { label:'B', icon:'💭', text:'We\'ve thought about it but haven\'t acted' },
-      { label:'C', icon:'✅', text:'Yes, once or twice when the difference was small' },
-      { label:'D', icon:'🌱', text:'Yes, regularly — it\'s part of how we make decisions' },
-    ]
-  },
-  {
-    category: 'Customer Communication',
-    text: 'How do you talk about sustainability to your customers?',
-    options: [
-      { label:'A', icon:'🔇', text:'We don\'t — it hasn\'t come up' },
-      { label:'B', icon:'🗣️', text:'Occasionally when a customer asks' },
-      { label:'C', icon:'📣', text:'Through campaigns and product storytelling' },
-      { label:'D', icon:'🌍', text:'It\'s woven into our brand identity at every touchpoint' },
-    ]
-  },
-  {
-    category: 'Where You Stand',
-    text: 'Where does your brand honestly sit on the sustainability journey?',
-    options: [
-      { label:'A', icon:'🌅', text:'We\'re just starting to think about it' },
-      { label:'B', icon:'🚶', text:'We\'re aware but haven\'t made big moves yet' },
-      { label:'C', icon:'🏃', text:'We\'re actively making changes — it\'s a work in progress' },
-      { label:'D', icon:'✨', text:'Sustainability is already at the core of what we build' },
-    ]
-  },
-];
-
-// Strongest area names per question index
-const areaNames = [
-  'Fabric Sourcing','Hemp Awareness','Supply Chain Transparency',
-  'Buying Decisions','Waste Management','Sustainability Communication',
-  'Production','Real Commitment','Customer Education','Brand Identity'
-];
-
-// ══════════════════════════════════════
-// PERSONAS — 5 tiers across 0–100
+// PERSONAS — 4 tiers across 0–100
 // ══════════════════════════════════════
 const personas = [
   {
-    min:0, max:20,
-    emoji:'🌅',
-    name:'The Starting Point',
-    desc:'Your brand is at the very beginning of the sustainability conversation. That\'s not a setback — it\'s an honest place to start from. The brands that build the most credibility are the ones who begin with honesty and grow with intention.',
-    traits:['Early Stage','Open to Learning','High Potential'],
-    verdict:'Every great journey starts somewhere. Yours starts here.'
-  },
-  {
-    min:21, max:40,
+    min:0, max:49,
     emoji:'🌱',
-    name:'The Aware Brand',
-    desc:'You know sustainability matters and you\'re starting to feel the pressure to act. The awareness is real — but awareness alone won\'t move the needle. The next step is turning what you know into what you do.',
-    traits:['Aware','Curious','Building'],
-    verdict:'You see the path. Now it\'s time to walk it.'
+    name:'Opportunity for Change',
+    desc:'The greatest environmental impact of a product often begins with its material. Reassessing your fibre strategy could substantially improve your sustainability performance.',
+    traits:['Opportunity for Change','Early Stage','High Potential'],
   },
   {
-    min:41, max:65,
+    min:50, max:74,
     emoji:'🌿',
-    name:'The Evolving Brand',
-    desc:'You\'re making real moves. Some systems are in place, some decisions are being made with intention. You\'re not just talking about sustainability — you\'re starting to build it in. Keep pushing the depth.',
-    traits:['Intentional','Progressing','Committed'],
-    verdict:'You\'re building something real. Keep going deeper.'
+    name:'Developing',
+    desc:'Your sustainability journey has begun, but material selection and supplier engagement offer significant room for improvement.',
+    traits:['Developing','Progressing','Committed'],
   },
   {
-    min:66, max:85,
+    min:75, max:89,
     emoji:'🌍',
-    name:'The Responsible Brand',
-    desc:'Sustainability is becoming part of how your brand actually operates — not just how it communicates. You\'re making sourcing decisions, having honest conversations with customers, and thinking beyond seasons. This is where real impact begins.',
-    traits:['Responsible','Systematic','Impact-Driven'],
-    verdict:'Sustainability is in your brand\'s DNA now.'
+    name:'Progressive Brand',
+    desc:'You\'re making informed sourcing decisions, with opportunities to deepen traceability and material innovation.',
+    traits:['Progressive Brand','Systematic','Impact-Driven'],
   },
   {
-    min:86, max:100,
+    min:90, max:100,
     emoji:'✨',
-    name:'The Future-Forward Brand',
-    desc:'You\'re not following the sustainable fashion movement — you\'re part of shaping it. Your decisions, your sourcing, your communication all reflect a brand that takes the long view. This is exactly the kind of brand the industry needs more of.',
-    traits:['Pioneering','Systemic','Leading'],
-    verdict:'You\'re setting the standard. The industry needs more brands like yours.'
+    name:'Industry Leader',
+    desc:'Your sourcing practices demonstrate strong environmental responsibility and supply chain maturity.',
+    traits:['Industry Leader','Pioneering','Leading'],
   },
 ];
 
 // ══════════════════════════════════════
 // STATE
 // ══════════════════════════════════════
-let brandName  = '';
-let userEmail  = '';
-let currentQ   = 0;
-let totalScore = 0;
-let selectedIndex = -1;
-let perQuestionScores = [];
-let perQuestionAnswers = []; // answer text per question
+let brandName    = '';
+let userEmail    = '';
+let userNumber   = '';
+let businessType = '';
+let questions    = [];
+let currentQ     = 0;
+let totalScore   = 0;
+let selectedScore = null;
+let selectedText  = '';
+let perQuestionAnswers = [];
 
 // ══════════════════════════════════════
-// EMAIL VALIDATION
+// VALIDATION HELPERS
 // ══════════════════════════════════════
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+}
+
+function isValidPhone(number) {
+  return /^[0-9]{10}$/.test(number.trim());
 }
 
 // ══════════════════════════════════════
@@ -1037,16 +1193,17 @@ function showScreen(id) {
 function startQuiz() {
   const nameEl  = document.getElementById('inp-name');
   const emailEl = document.getElementById('inp-email');
+  const numberEl = document.getElementById('inp-number');
+  const typeEl  = document.getElementById('inp-business-type');
+
   const errName  = document.getElementById('err-name');
-  const errEmail = document.getElementById('err-email');
+  const errContact = document.getElementById('err-contact');
+  const errType  = document.getElementById('err-business-type');
 
   let valid = true;
 
-  // reset errors
-  nameEl.classList.remove('error');
-  emailEl.classList.remove('error');
-  errName.classList.remove('show');
-  errEmail.classList.remove('show');
+  [nameEl, emailEl, numberEl, typeEl].forEach(el => el.classList.remove('error'));
+  [errName, errContact, errType].forEach(el => el.classList.remove('show'));
 
   if (!nameEl.value.trim()) {
     nameEl.classList.add('error');
@@ -1054,20 +1211,40 @@ function startQuiz() {
     valid = false;
   }
 
-  if (!isValidEmail(emailEl.value)) {
-    emailEl.classList.add('error');
-    errEmail.classList.add('show');
+  const emailVal = emailEl.value.trim();
+  const numberVal = numberEl.value.trim();
+  const hasValidEmail = emailVal !== '' && isValidEmail(emailVal);
+  const hasValidNumber = numberVal !== '' && isValidPhone(numberVal);
+
+  if (!hasValidEmail && !hasValidNumber) {
+    if (emailVal !== '' && !hasValidEmail) emailEl.classList.add('error');
+    if (numberVal !== '' && !hasValidNumber) numberEl.classList.add('error');
+    if (emailVal === '' && numberVal === '') {
+      emailEl.classList.add('error');
+      numberEl.classList.add('error');
+    }
+    errContact.classList.add('show');
+    valid = false;
+  }
+
+  if (!typeEl.value) {
+    typeEl.classList.add('error');
+    errType.classList.add('show');
     valid = false;
   }
 
   if (!valid) return;
 
-  brandName  = nameEl.value.trim();
-  userEmail  = emailEl.value.trim();
+  brandName    = nameEl.value.trim();
+  userEmail    = hasValidEmail ? emailVal : '';
+  userNumber   = hasValidNumber ? numberVal : '';
+  businessType = typeEl.value;
+  questions    = QUESTION_SETS[businessType];
+
   currentQ   = 0;
   totalScore = 0;
-  selectedIndex = -1;
-  perQuestionScores = [];
+  selectedScore = null;
+  selectedText  = '';
   perQuestionAnswers = [];
 
   showScreen('screen-quiz');
@@ -1079,7 +1256,8 @@ function startQuiz() {
 // ══════════════════════════════════════
 function renderQuestion() {
   const q = questions[currentQ];
-  selectedIndex = -1;
+  selectedScore = null;
+  selectedText  = '';
 
   document.getElementById('q-num-label').textContent = `Question ${currentQ+1} of ${questions.length}`;
   document.getElementById('progress-fill').style.width = `${((currentQ+1)/questions.length)*100}%`;
@@ -1108,20 +1286,18 @@ function renderQuestion() {
 // SELECT OPTION — ALLOWS RE-SELECTION
 // ══════════════════════════════════════
 function selectOption(el, index) {
-  // Always allow re-selection — remove selected from all first
   document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-
-  // Apply selected to clicked button
   el.classList.add('selected');
-  selectedIndex = index;
 
-  // Show Next button if not already visible
+  const opt = questions[currentQ].options[index];
+  selectedScore = opt.score;
+  selectedText  = opt.text;
+
   const btn = document.getElementById('btn-next');
   if (!btn.classList.contains('visible')) {
     btn.classList.add('visible');
   }
 
-  // Haptic
   if (navigator.vibrate) navigator.vibrate(30);
 }
 
@@ -1129,12 +1305,10 @@ function selectOption(el, index) {
 // NEXT QUESTION
 // ══════════════════════════════════════
 function nextQuestion() {
-  if (selectedIndex === -1) { showToast('Pick an option first 🌿'); return; }
+  if (selectedScore === null) { showToast('Pick an option first 🌿'); return; }
 
-  const pts = SCORE_MAP[selectedIndex];
-  totalScore += pts;
-  perQuestionScores.push({ q: currentQ, score: pts });
-  perQuestionAnswers.push(questions[currentQ].options[selectedIndex].text);
+  totalScore += selectedScore;
+  perQuestionAnswers.push(selectedText);
 
   currentQ++;
   if (currentQ < questions.length) {
@@ -1149,15 +1323,13 @@ function nextQuestion() {
 // FINISH
 // ══════════════════════════════════════
 function finishQuiz() {
-  const persona = personas.find(p => totalScore >= p.min && totalScore <= p.max) || personas[4];
+  const persona = personas.find(p => totalScore >= p.min && totalScore <= p.max) || personas[personas.length-1];
 
-  // Find strongest area (highest score) and opportunity (lowest score)
-  const sorted = [...perQuestionScores].sort((a,b) => b.score - a.score);
-  const strongestArea = areaNames[sorted[0].q];
-  const opportunityArea = areaNames[sorted[sorted.length-1].q];
-
-  // Populate result screen
-  document.getElementById('res-verdict').textContent = persona.verdict;
+  // FIX: previously this overwrote res-verdict with the same text as the
+  // bottom .cta-card, causing the "Want to improve your score?" message
+  // to appear twice on the result screen. Now it shows a short, distinct
+  // verdict line instead, and the CTA text only lives in the card below.
+  document.getElementById('res-verdict').textContent = 'Your sustainability profile is ready.';
   document.getElementById('res-emoji').textContent = persona.emoji;
   document.getElementById('res-name').innerHTML = `<em>${persona.name}</em>`;
   document.getElementById('res-score-num').textContent = '0';
@@ -1166,26 +1338,8 @@ function finishQuiz() {
   const traitsEl = document.getElementById('res-traits');
   traitsEl.innerHTML = persona.traits.map(t => `<div class="trait-chip">${t}</div>`).join('');
 
-  document.getElementById('res-insights').innerHTML = `
-    <div class="insight-row">
-      <div class="insight-icon">💪</div>
-      <div class="insight-content">
-        <div class="insight-label">Strongest Area</div>
-        <div class="insight-text">${strongestArea}</div>
-      </div>
-    </div>
-    <div class="insight-row">
-      <div class="insight-icon">🎯</div>
-      <div class="insight-content">
-        <div class="insight-label">Biggest Opportunity</div>
-        <div class="insight-text">${opportunityArea}</div>
-      </div>
-    </div>
-  `;
-
   showScreen('screen-result');
 
-  // Animate score ring & counter
   setTimeout(() => {
     const pct = totalScore / 100;
     const circumference = 314;
@@ -1195,12 +1349,10 @@ function finishQuiz() {
     animateCount('res-score-num', 0, totalScore, 1200);
   }, 300);
 
-  // Confetti for high scorers
   if (totalScore >= 66) {
     setTimeout(launchConfetti, 600);
   }
 
-  // Save to Google Sheet (fire & forget)
   saveToSheet(persona);
 }
 
@@ -1210,19 +1362,21 @@ function finishQuiz() {
 function saveToSheet(persona) {
   try {
     const payload = {
-      timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-      name:      brandName,
-      email:     userEmail,
-      score:     totalScore,
-      persona:   persona.name,
+      secret:       CONFIG.SECRET,
+      timestamp:    new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      name:         brandName,
+      email:        userEmail,
+      number:       userNumber,
+      businessType: businessType,
+      score:        totalScore,
+      
     };
-    // Add each question answer as q1, q2 ... q10
     perQuestionAnswers.forEach((ans, i) => {
       payload[`q${i+1}`] = ans;
     });
     fetch(CONFIG.SUBMIT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload)
     });
   } catch(e) {
@@ -1255,15 +1409,20 @@ function showToast(msg) {
 function retake() {
   currentQ = 0;
   totalScore = 0;
-  selectedIndex = -1;
-  perQuestionScores = [];
+  selectedScore = null;
+  selectedText  = '';
   perQuestionAnswers = [];
   document.getElementById('inp-name').value = '';
   document.getElementById('inp-email').value = '';
-  document.getElementById('inp-name').classList.remove('error');
-  document.getElementById('inp-email').classList.remove('error');
-  document.getElementById('err-name').classList.remove('show');
-  document.getElementById('err-email').classList.remove('show');
+  document.getElementById('inp-number').value = '';
+  document.getElementById('inp-business-type').value = '';
+  document.getElementById('inp-business-type').classList.add('placeholder-active');
+  ['inp-name','inp-email','inp-number','inp-business-type'].forEach(id => {
+    document.getElementById(id).classList.remove('error');
+  });
+  ['err-name','err-contact','err-business-type'].forEach(id => {
+    document.getElementById(id).classList.remove('show');
+  });
   document.getElementById('result-ring').setAttribute('stroke-dashoffset', 314);
   showScreen('screen-landing');
 }
