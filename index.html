@@ -724,24 +724,50 @@ body {
 
 /* cta card */
 .cta-card {
-  background: rgba(196,146,58,0.1);
-  border: 1px solid rgba(196,146,58,0.25);
+  background: linear-gradient(135deg, rgba(232,185,106,0.22), rgba(196,146,58,0.12));
+  border: 1px solid rgba(232,185,106,0.5);
   border-radius: var(--r-lg);
-  padding: 20px;
-  margin-bottom: 16px;
+  padding: 22px 20px;
   text-align: center;
+  box-shadow: 0 0 0 1px rgba(232,185,106,0.08), 0 8px 24px rgba(196,146,58,0.15);
 }
 
 .cta-icon {
-  font-size: 22px;
+  font-size: 24px;
   margin-bottom: 8px;
 }
 
 .cta-text {
   font-size: 13px;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255,255,255,0.85);
   font-weight: 300;
   line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.cta-swatch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 18px;
+  background: linear-gradient(135deg, #e8b96a, #c4923a);
+  border: none;
+  border-radius: 12px;
+  color: #1a2e1f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(196,146,58,0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cta-swatch-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(196,146,58,0.3);
 }
 
 /* traits */
@@ -760,19 +786,6 @@ body {
   padding: 6px 14px;
   font-size: 11px;
   color: rgba(255,255,255,0.65);
-}
-
-.btn-retake {
-  width: 100%;
-  padding: 16px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 14px;
-  color: rgba(255,255,255,0.65);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  cursor: pointer;
-  margin-top: 4px;
 }
 
 /* ── TOAST ── */
@@ -971,9 +984,8 @@ body {
     <div class="cta-card">
       <div class="cta-icon">🌿</div>
       <div class="cta-text">Want to improve your score?<br>Explore hemp, hemp blends, bamboo, and other low-impact fabrics by Weaving Vibes</div>
+      <a class="cta-swatch-btn" href="https://weavingvibes.com/products/swatch-book?_pos=1&_psq=swatc&_psid=2b58917b6&_ss=e&_v=1.0" target="_blank" rel="noopener">Request a Swatch Book →</a>
     </div>
-
-    <button class="btn-retake" onclick="retake()">↩ Retake Assessment</button>
   </div>
 </div>
 
